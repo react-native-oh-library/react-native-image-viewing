@@ -1,6 +1,6 @@
 {
-  "name": "react-native-image-viewing",
-  "version": "0.2.2",
+  "name": "@react-native-oh-tpl/react-native-image-viewing",
+  "version": "0.2.2-0.0.1",
   "description": "React Native modal component for viewing images as a sliding gallery",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -12,6 +12,7 @@
     "react",
     "react-native",
     "image",
+    "harmony",
     "gallery",
     "image-gallery",
     "image-viewer"
@@ -26,6 +27,7 @@
   },
   "files": [
     "dist",
+    "harmony",
     "readme.md",
     "package.json"
   ],
@@ -33,6 +35,9 @@
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/jobtoday/react-native-image-viewing/issues"
+  },
+  "harmony":{
+    "alias":"react-native-image-viewing"
   },
   "homepage": "https://github.com/jobtoday/react-native-image-viewing#readme",
   "devDependencies": {
