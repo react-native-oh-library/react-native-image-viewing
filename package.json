@@ -1,51 +1,53 @@
 {
-  "name": "@react-native-oh-tpl/react-native-image-viewing",
-  "version": "0.2.2-0.0.2",
-  "description": "React Native modal component for viewing images as a sliding gallery",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/jobtoday/react-native-image-viewing.git"
-  },
-  "keywords": [
-    "react",
-    "react-native",
-    "image",
-    "harmony",
-    "gallery",
-    "image-gallery",
-    "image-viewer"
-  ],
-  "scripts": {
-    "build": "tsc",
-    "postversion": "yarn build"
-  },
-  "peerDependencies": {
-    "react": ">=16.11.0",
-    "react-native": ">=0.61.3"
-  },
-  "files": [
-    "dist",
-    "harmony",
-    "readme.md",
-    "package.json"
-  ],
-  "author": "Anton Kalinin",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/jobtoday/react-native-image-viewing/issues"
-  },
-  "harmony":{
-    "alias":"react-native-image-viewing"
-  },
-  "homepage": "https://github.com/jobtoday/react-native-image-viewing#readme",
-  "devDependencies": {
-    "@babel/runtime": "7.7.4",
-    "@types/react": "16.9.13",
-    "@types/react-native": "0.60.23",
-    "react": "16.12.0",
-    "react-native": "0.61.5",
-    "typescript": "3.7.2"
-  }
+	"name": "@react-native-oh-tpl/react-native-image-viewing",
+	"version": "0.2.2-0.0.2",
+	"description": "React Native modal component for viewing images as a sliding gallery",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/react-native-oh-library/react-native-image-viewing.git"
+	},
+	"keywords": [
+		"react",
+		"react-native",
+		"image",
+		"harmony",
+		"gallery",
+		"image-gallery",
+		"image-viewer"
+	],
+	"scripts": {
+		"build": "tsc",
+		"postversion": "yarn build"
+	},
+	"dependencies": {
+		"react-native-image-viewing": "0.2.2"
+	},
+	"peerDependencies": {
+		"react": ">=16.11.0",
+		"react-native": ">=0.61.3"
+	},
+	"files": [
+		"dist",
+		"harmony",
+		"readme.md",
+		"package.json"
+	],
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/react-native-oh-library/react-native-image-viewing/issues"
+	},
+	"harmony": {
+		"alias": "react-native-image-viewing"
+	},
+	"homepage": "https://github.com/react-native-oh-library/react-native-image-viewing",
+	"devDependencies": {
+		"@babel/runtime": "7.7.4",
+		"@types/react": "16.9.13",
+		"@types/react-native": "0.60.23",
+		"react": "16.12.0",
+		"react-native": "0.61.5",
+		"typescript": "3.7.2"
+	}
 }

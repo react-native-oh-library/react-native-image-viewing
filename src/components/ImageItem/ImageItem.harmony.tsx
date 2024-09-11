@@ -16,12 +16,11 @@ import {
   View,
   NativeScrollEvent,
   NativeSyntheticEvent,
-  TouchableWithoutFeedback,
-  GestureResponderEvent,
+  NativeMethodsMixin
 } from "react-native";
 
-import useDoubleTapToZoom from "../../hooks/useDoubleTapToZoom";
 import useImageDimensions from "../../hooks/useImageDimensions";
+import usePanResponder from "../../hooks/usePanResponder";
 
 import { getImageStyles, getImageTransform } from "../../utils";
 import { ImageSource } from "../../@types";
@@ -53,21 +52,46 @@ const ImageItem = ({
   doubleTapToZoomEnabled = true,
 }: Props) => {
   const scrollViewRef = useRef<ScrollView>(null);
+  const imageContainer = useRef<ScrollView & NativeMethodsMixin>(null);
   const [loaded, setLoaded] = useState(false);
-  const [scaled, setScaled] = useState(false);
   const imageDimensions = useImageDimensions(imageSrc);
-  const handleDoubleTap = useDoubleTapToZoom(scrollViewRef, scaled, SCREEN);
 
   const [translate, scale] = getImageTransform(imageDimensions, SCREEN);
   const scrollValueY = new Animated.Value(0);
-  const scaleValue = new Animated.Value(scale || 1);
-  const translateValue = new Animated.ValueXY(translate);
   const maxScale = scale && scale > 0 ? Math.max(1 / scale, 1) : 1;
 
   const imageOpacity = scrollValueY.interpolate({
     inputRange: [-SWIPE_CLOSE_OFFSET, 0, SWIPE_CLOSE_OFFSET],
     outputRange: [0.5, 1, 0.5],
   });
+
+  const onLoaded = useCallback(() => setLoaded(true), []);
+
+  const onZoomPerformed = useCallback(
+    (isZoomed: boolean) => {
+      onZoom(isZoomed);
+      if (imageContainer?.current) {
+        imageContainer.current.setNativeProps({
+          scrollEnabled: !isZoomed,
+        });
+      }
+    },
+    [imageContainer]
+  );
+
+  const onLongPressHandler = useCallback(() => {
+    onLongPress(imageSrc);
+  }, [imageSrc, onLongPress]);
+
+  const [panHandlers, scaleValue, translateValue] = usePanResponder({
+    initialScale: scale || 1,
+    initialTranslate: translate || { x: 0, y: 0 },
+    onZoom: onZoomPerformed,
+    doubleTapToZoomEnabled,
+    onLongPress: onLongPressHandler,
+    delayLongPress,
+  });
+
   const imagesStyles = getImageStyles(
     imageDimensions,
     translateValue,
@@ -75,43 +99,28 @@ const ImageItem = ({
   );
   const imageStylesWithOpacity = { ...imagesStyles, opacity: imageOpacity };
 
-  const onScrollEndDrag = useCallback(
-    ({ nativeEvent }: NativeSyntheticEvent<NativeScrollEvent>) => {
-      const velocityY = nativeEvent?.velocity?.y ?? 0;
-      const scaled = nativeEvent?.zoomScale > 1;
+  const onScrollEndDrag = ({
+    nativeEvent,
+  }: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const velocityY = nativeEvent?.velocity?.y ?? 0;
+    const offsetY = nativeEvent?.contentOffset?.y ?? 0;
 
-      onZoom(scaled);
-      setScaled(scaled);
-
-      if (
-        !scaled &&
-        swipeToCloseEnabled &&
-        Math.abs(velocityY) > SWIPE_CLOSE_VELOCITY
-      ) {
-        onRequestClose();
-      }
-    },
-    [scaled]
-  );
+    if (
+      (Math.abs(velocityY) > SWIPE_CLOSE_VELOCITY &&
+        offsetY > SWIPE_CLOSE_OFFSET) ||
+      offsetY > SCREEN_HEIGHT / 2
+    ) {
+      onRequestClose();
+    }
+  };
 
   const onScroll = ({
     nativeEvent,
   }: NativeSyntheticEvent<NativeScrollEvent>) => {
     const offsetY = nativeEvent?.contentOffset?.y ?? 0;
 
-    if (nativeEvent?.zoomScale > 1) {
-      return;
-    }
-
     scrollValueY.setValue(offsetY);
   };
-
-  const onLongPressHandler = useCallback(
-    (event: GestureResponderEvent) => {
-      onLongPress(imageSrc);
-    },
-    [imageSrc, onLongPress]
-  );
 
   return (
     <View>
@@ -124,24 +133,19 @@ const ImageItem = ({
         maximumZoomScale={maxScale}
         contentContainerStyle={styles.imageScrollContainer}
         scrollEnabled={swipeToCloseEnabled}
-        onScrollEndDrag={onScrollEndDrag}
         scrollEventThrottle={1}
         {...(swipeToCloseEnabled && {
           onScroll,
+          onScrollEndDrag
         })}
       >
+        <Animated.Image
+          {...panHandlers}
+          source={imageSrc}
+          style={imageStylesWithOpacity}
+          onLoad={onLoaded}
+        />
         {(!loaded || !imageDimensions) && <ImageLoading />}
-        <TouchableWithoutFeedback
-          onPress={doubleTapToZoomEnabled ? handleDoubleTap : undefined}
-          onLongPress={onLongPressHandler}
-          delayLongPress={delayLongPress}
-        >
-          <Animated.Image
-            source={imageSrc}
-            style={imageStylesWithOpacity}
-            onLoad={() => setLoaded(true)}
-          />
-        </TouchableWithoutFeedback>
       </ScrollView>
     </View>
   );
@@ -153,7 +157,7 @@ const styles = StyleSheet.create({
     height: SCREEN_HEIGHT,
   },
   imageScrollContainer: {
-    height: SCREEN_HEIGHT,
+    height: SCREEN_HEIGHT * 2,
   },
 });
 
