@@ -10,8 +10,9 @@ const StatusBarManager = ({
 }: {
   presentationStyle?: ModalProps["presentationStyle"];
 }) => {
-  const isIOS = Platform.OS === "ios" || 'harmony'
-  if (isIOS || presentationStyle !== "overFullScreen") {
+  const isIOS = Platform.OS === "ios"
+  const isHARMONYOS = Platform.OS === "harmony"
+  if (isIOS || isHARMONYOS || presentationStyle !== "overFullScreen") {
     return null;
   }
 
