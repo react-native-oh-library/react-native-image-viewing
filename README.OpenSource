@@ -1,0 +1,11 @@
+[
+    {
+        "Name": "react-native-image-viewing",
+        "License": "MIT License",
+        "License File": "https://github.com/jobtoday/react-native-image-viewing/blob/master/LICENSE",
+        "Version Number": "0.2.2",
+        "Owner" : "xiafeng@huawei.com",
+        "Upstream URL": "https://github.com/jobtoday/react-native-image-viewing",
+        "Description": "React Native modal component for viewing images as a sliding gallery"
+    }
+]
