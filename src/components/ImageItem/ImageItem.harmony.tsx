@@ -53,6 +53,7 @@ const ImageItem = ({
 }: Props) => {
   const scrollViewRef = useRef<ScrollView>(null);
   const imageContainer = useRef<ScrollView & NativeMethodsMixin>(null);
+  const beginTamp = useRef<number>(0);
   const [loaded, setLoaded] = useState(false);
   const imageDimensions = useImageDimensions(imageSrc);
 
@@ -102,8 +103,9 @@ const ImageItem = ({
   const onScrollEndDrag = ({
     nativeEvent,
   }: NativeSyntheticEvent<NativeScrollEvent>) => {
-    const velocityY = nativeEvent?.velocity?.y ?? 0;
     const offsetY = nativeEvent?.contentOffset?.y ?? 0;
+    const currentTemp = new Date().getTime() 
+    const velocityY = offsetY/(currentTemp-beginTamp.current)
 
     if (
       (Math.abs(velocityY) > SWIPE_CLOSE_VELOCITY &&
@@ -111,8 +113,15 @@ const ImageItem = ({
       offsetY > SCREEN_HEIGHT / 2
     ) {
       onRequestClose();
+    }else{
+      scrollViewRef.current.scrollTo({x:0, y:0, animated: true})
     }
   };
+
+  const onScrollBeginDrag = () => {
+    beginTamp.current = new Date().getTime() 
+  }
+
 
   const onScroll = ({
     nativeEvent,
@@ -136,7 +145,8 @@ const ImageItem = ({
         scrollEventThrottle={1}
         {...(swipeToCloseEnabled && {
           onScroll,
-          onScrollEndDrag
+          onScrollEndDrag,
+          onScrollBeginDrag
         })}
       >
         <Animated.Image
@@ -157,7 +167,7 @@ const styles = StyleSheet.create({
     height: SCREEN_HEIGHT,
   },
   imageScrollContainer: {
-    height: SCREEN_HEIGHT
+    height: SCREEN_HEIGHT * 2
   },
 });
 
