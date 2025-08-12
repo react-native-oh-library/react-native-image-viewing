@@ -1,6 +1,6 @@
 # @react-native-oh-tpl/react-native-image-viewing
 
-This project is based on [react-native-image-viewing](https://github.com/jobtoday/react-native-image-viewing)
+This project is based on [react-native-image-viewing@0.2.2](https://github.com/jobtoday/react-native-image-viewing/tree/v0.2.2)
 
 ## Documentation
 
