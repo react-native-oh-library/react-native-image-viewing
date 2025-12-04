@@ -109,8 +109,8 @@ const ImageItem = ({
 
     if (
       (Math.abs(velocityY) > SWIPE_CLOSE_VELOCITY &&
-        offsetY > SWIPE_CLOSE_OFFSET) ||
-      offsetY > SCREEN_HEIGHT / 2
+        Math.abs(offsetY) > SWIPE_CLOSE_OFFSET) ||
+      Math.abs(offsetY) > SCREEN_HEIGHT / 2
     ) {
       onRequestClose();
     }else{
@@ -167,7 +167,7 @@ const styles = StyleSheet.create({
     height: SCREEN_HEIGHT,
   },
   imageScrollContainer: {
-    height: SCREEN_HEIGHT * 2
+    height: SCREEN_HEIGHT
   },
 });
 
